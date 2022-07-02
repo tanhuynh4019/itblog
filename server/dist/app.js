@@ -7,9 +7,14 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
+const redis_1 = __importDefault(require("redis"));
 const config_1 = __importDefault(require("./config/config"));
 const router_1 = __importDefault(require("./router"));
 const app = (0, express_1.default)();
+const client = redis_1.default.createClient();
+client.on('connect', function () {
+    console.log('object');
+});
 app.use((0, morgan_1.default)('combined'));
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());

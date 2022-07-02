@@ -1,3 +1,4 @@
+import {createClient} from "redis"
 import bcryptModule from '../module/bcrypt.module'
 import jwtModule from '../module/jwt.module'
 
@@ -8,8 +9,11 @@ import e_HistoryType from '../common/history.enum'
 
 import historyService from '../service/history' 
 
+const redis_client = createClient()
+
 class UserService {
     private message: string;
+    private random: string = Math.random().toString(36).substring(2,7)
 
     constructor(message: string) {
         this.message = message;
@@ -36,6 +40,10 @@ class UserService {
                 return false
             }
 
+            
+            await redis_client.connect();
+            await redis_client.set(this.random, token)
+
             const c_history = await historyService.add(c_user._id, e_ActiveType.REGISTER, e_HistoryType.ACCESS)
             if(!c_history){
                 this.setMessage('Đã đăng ký thành công, vì một số vấn đề nên vui lòng xác minh E-mail!')
@@ -43,7 +51,7 @@ class UserService {
             }
 
             this.setMessage('Đăng ký tài khoản ITBlog thành công!')
-            return { token }
+            return { token_id: this.random }
 
         } catch (error: any) {
             if (error.code === 11000) {

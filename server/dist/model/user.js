@@ -33,7 +33,7 @@ const type_login_enum_1 = __importDefault(require("../common/type_login.enum"));
 const userSchema = new mongoose_1.Schema({
     username: { type: String, required: true },
     password_hash: { type: String, required: true },
-    email: { type: String, required: true, validate: validator_1.default.isEmail, unique: true },
+    email: { type: String, unique: true, required: true, validate: validator_1.default.isEmail },
     role: { type: Number, required: true, default: role_enum_1.default.USER, enum: [role_enum_1.default.USER, role_enum_1.default.EDITOR, role_enum_1.default.ADMIN, role_enum_1.default.SUPERADMIN] },
     login_type: { type: Number, required: true, default: type_login_enum_1.default.DEFAULT, enum: [type_login_enum_1.default.DEFAULT, type_login_enum_1.default.FACEBOOK, type_login_enum_1.default.GOOGLE, type_login_enum_1.default.ZALO, type_login_enum_1.default.GITHUB] },
     phone: { type: Number },

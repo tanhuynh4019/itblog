@@ -7,6 +7,7 @@ import config from './config/config'
 import router from './router'
 
 const app: Application = express()
+
 app.use(morgan('combined'))
 app.use(cors())
 app.use(express.json())
