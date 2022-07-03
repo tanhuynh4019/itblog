@@ -1,56 +1,77 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+  <v-app id="inspire">
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+    <v-app-bar app color="white" class="no-shadow">
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-responsive max-width="156">
+        <v-btn color="#006064" outlined :to="{ name: 'login' }">Đăng nhập</v-btn>
+      </v-responsive>
     </v-app-bar>
 
-    <v-main>
-      <router-view/>
+    <v-navigation-drawer v-model="drawer" fixed temporary>
+      <!--  -->
+    </v-navigation-drawer>
+
+    <v-main color="white">
+      <v-container>
+        <router-view :website="website" @showSnackbar="snackbar = $event" />
+        <v-snackbar v-model="snackbar.snackbar" :timeout="timeout" top>
+          {{ snackbar.text }}
+
+          <template v-slot:action="{ attrs }">
+            <v-btn color="blue" text v-bind="attrs" @click="snackbar.snackbar = false">
+              Đóng
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import UserApi from './api/user.api';
+export default {
+  async created() {
+    
 
-export default Vue.extend({
-  name: 'App',
-
+  },
   data: () => ({
-    //
+    user: null,
+    drawer: null,
+    snackbar: {
+      snackbar: false,
+      text: '',
+    },
+    timeout: 2000,
+    website: {
+      color: {
+        main: '#006064'
+      }
+    }
   }),
-});
+  methods: {
+    async loadAuth() {
+      let that = this;
+      const g_user = await UserApi.getAuth();
+    }
+  }
+}
 </script>
+
+<style>
+.no-shadow {
+  box-shadow: none !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+a {
+  text-decoration: none !important;
+}
+</style>

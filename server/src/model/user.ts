@@ -7,7 +7,6 @@ import e_TYPELOGIN from '../common/type_login.enum'
 import IUser from '../interface/user'
 
 const userSchema: Schema = new Schema({
-    username: { type: String, required: true },
     password_hash: { type: String, required: true },
     email: { type: String, unique: true, required: true, validate: validator.isEmail },
     role: { type: Number, required: true, default: e_ROLE.USER, enum: [e_ROLE.USER, e_ROLE.EDITOR, e_ROLE.ADMIN, e_ROLE.SUPERADMIN] },

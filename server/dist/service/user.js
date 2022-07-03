@@ -12,14 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const redis_1 = require("redis");
 const bcrypt_module_1 = __importDefault(require("../module/bcrypt.module"));
 const jwt_module_1 = __importDefault(require("../module/jwt.module"));
 const user_1 = __importDefault(require("../model/user"));
 const activity_type_enum_1 = __importDefault(require("../common/activity_type.enum"));
 const history_enum_1 = __importDefault(require("../common/history.enum"));
 const history_1 = __importDefault(require("../service/history"));
+const redis_client = (0, redis_1.createClient)();
 class UserService {
     constructor(message) {
+        this.random = Math.random().toString(36).substring(2, 7);
         this.getMessage = () => {
             return this.message;
         };
@@ -45,13 +48,15 @@ class UserService {
                     this.setMessage('Đã đăng ký thành công, vui lòng đăng nhập!');
                     return false;
                 }
+                yield redis_client.connect();
+                yield redis_client.set(this.random, token);
                 const c_history = yield history_1.default.add(c_user._id, activity_type_enum_1.default.REGISTER, history_enum_1.default.ACCESS);
                 if (!c_history) {
                     this.setMessage('Đã đăng ký thành công, vì một số vấn đề nên vui lòng xác minh E-mail!');
                     return false;
                 }
                 this.setMessage('Đăng ký tài khoản ITBlog thành công!');
-                return { token };
+                return { token_id: this.random };
             }
             catch (error) {
                 if (error.code === 11000) {
