@@ -1,5 +1,5 @@
 <template>
-    <div v-if="website">
+    <div v-if="!user">
         <center>
             <v-card width="400">
                 <div class="pa-6 text-start">
@@ -18,8 +18,8 @@
                         </v-text-field>
                     </v-form>
 
-                    <v-btn @click="register()" class="w-100 rounded-pill" :color="website.color.main" dark depressed
-                        large>Đăng ký</v-btn>
+                    <v-btn @click="register()" :loading="isLoadingSave" class="w-100 rounded-pill"
+                        :color="website.color.main" dark depressed large>Đăng ký</v-btn>
 
                     <div class="mt-5 text-center">Hoặc</div>
 
@@ -55,8 +55,9 @@ import UserApi from '../../api/user.api'
 
 export default Vue.extend({
     name: 'Register',
-    props: ['website'],
+    props: ['website', 'user'],
     data: () => ({
+        isLoadingSave: false,
         userFrom: {
             value: {
                 username: '',
@@ -83,23 +84,41 @@ export default Vue.extend({
             return () => (this.userFrom.value.password === this.userFrom.value.confirm_password) || 'Xác nhận mật khẩu không khớp!'
         }
     },
+    mounted() {
+        if (this.user) {
+            this.$router.push({ name: 'error404' })
+        }
+    },
+    watch: {
+        user() {
+            if (this.user) {
+                this.$router.push({ name: 'error404' })
+            }
+        }
+    },
     methods: {
         async register() {
             let that = this;
             const valid = (that.$refs.userFrom as Vue & { validate: () => boolean }).validate();
             if (valid) {
+                that.isLoadingSave = true;
                 const formData = new FormData();
                 formData.append('email', that.userFrom.value.email);
                 formData.append('password', that.userFrom.value.password);
                 formData.append('confirm_password', that.userFrom.value.confirm_password);
 
-                const c_user = await UserApi.register(formData)
-                console.log(c_user);
+                const c_user = await UserApi.register(formData);
                 if (!c_user.error) {
                     localStorage.setItem("token_id", c_user.data.token_id);
                     that.$emit('showSnackbar', { snackbar: true, text: c_user.message });
+
+                    const g_user: any = await UserApi.getAuth();
+                    that.$emit('userEmit', g_user.data);
+
+                    that.$router.push({ path: `/profile/${c_user.data.username}` })
                 } else {
                     that.$emit('showSnackbar', { snackbar: true, text: c_user.message });
+                    that.isLoadingSave = false;
                 }
             }
         }

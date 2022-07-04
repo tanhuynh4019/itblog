@@ -1,19 +1,17 @@
 import jwt from 'jsonwebtoken'
 
-const {
-    JWT_SECRET
-} = require('../config/jwt')
-
 class JWT {
     private exp: number = new Date().setDate(new Date().getDate() + 3)
     private iat: number = new Date().getTime()
+    private jwt_secret: string = String(process.env.JWT_SECRET)
 
     public async endcodedToken(employerID: string) {
-        return jwt.sign({
+        const c_token = await jwt.sign({
             sub: employerID,
             iat: this.iat,
             exp: this.exp
-        }, JWT_SECRET)
+        }, this.jwt_secret)
+        return c_token
     }
 }
 

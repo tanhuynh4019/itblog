@@ -6,6 +6,8 @@ import LoginView from '../views/user/LoginView.vue'
 import RegisterView from '../views/user/RegisterView.vue'
 import ProfileView from '../views/user/ProfileView.vue'
 
+import Error404View from '../views/error/Error404View.vue'
+
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
@@ -28,6 +30,11 @@ const routes: Array<RouteConfig> = [
     path: '/profile/:username',
     name: 'profile',
     component: ProfileView
+  },
+  {
+    path: '/404',
+    name: 'error404',
+    component: Error404View
   }
 ]
 

@@ -21,9 +21,17 @@ class UserApi{
         }
     }
 
+    public async login(body: any) {
+        try {
+            const e_user = await axios.patch(this.url + '/login', body)
+            return e_user.data
+        } catch (error: any) {
+            return error.response.data;
+        }
+    }
+
     public async getAuth() {
         try {
-            console.log(await this.tokenRedius());
             const g_user = await axios.get(this.url, {
                 headers: {
                     Authorization: `Bearer ${await this.tokenRedius()}`

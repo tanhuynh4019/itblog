@@ -13,6 +13,9 @@ router.get('/api/auth', passport.authenticate('jwt', {
     session: false
 }), controllerUser.secrettUser)
 router.get('/api/auth/token_redius/:token_id', controllerUser.tokenRedius)
+router.patch('/api/auth/login', upload.none(), passport.authenticate('local', {
+    session: false
+}), controllerUser.login)
 
 export default router
 

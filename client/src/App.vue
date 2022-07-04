@@ -1,23 +1,11 @@
 <template>
   <v-app id="inspire">
 
-    <v-app-bar app color="white" class="no-shadow">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-spacer></v-spacer>
-
-      <v-responsive max-width="156">
-        <v-btn color="#006064" outlined :to="{ name: 'login' }">Đăng nhập</v-btn>
-      </v-responsive>
-    </v-app-bar>
-
-    <v-navigation-drawer v-model="drawer" fixed temporary>
-      <!--  -->
-    </v-navigation-drawer>
+    <HeaderComponent :user="user" :website="website" />
 
     <v-main color="white">
       <v-container>
-        <router-view :website="website" @showSnackbar="snackbar = $event" />
+        <router-view :website="website" @showSnackbar="snackbar = $event" :user="user" @userEmit="user = $event" />
         <v-snackbar v-model="snackbar.snackbar" :timeout="timeout" top>
           {{ snackbar.text }}
 
@@ -33,33 +21,48 @@
 </template>
 
 <script lang="ts">
-import UserApi from './api/user.api';
-export default {
-  async created() {
-    
+import HeaderComponent from './components/Header.vue'
 
+import Vue from 'vue'
+import UserApi from './api/user.api';
+
+interface User {
+  coin: number
+}
+
+export default Vue.extend({
+  name: 'Home',
+  components: {
+    HeaderComponent,
   },
-  data: () => ({
-    user: null,
-    drawer: null,
-    snackbar: {
-      snackbar: false,
-      text: '',
-    },
-    timeout: 2000,
-    website: {
-      color: {
-        main: '#006064'
+  async created() {
+    let that = this;
+    that.loadAuth();
+  },  
+  data() {
+    return {
+      user: null,
+      drawer: false,
+      snackbar: {
+        snackbar: false,
+        text: '',
+      },
+      timeout: 2000,
+      website: {
+        color: {
+          main: '#006064'
+        }
       }
     }
-  }),
+  },
   methods: {
-    async loadAuth() {
+    async loadAuth(): Promise<any> {
       let that = this;
-      const g_user = await UserApi.getAuth();
+      const g_user: any = await UserApi.getAuth();
+      that.user = g_user.data;
     }
   }
-}
+})
 </script>
 
 <style>

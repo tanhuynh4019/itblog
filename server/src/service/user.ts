@@ -35,29 +35,30 @@ class UserService {
             body.password_hash = hashPassword
 
             const exist_user = await userModel.findOne({ email })
-            if(exist_user){
+            if (exist_user) {
                 this.setMessage('E-mail đã được sử dụng, vui lòng chọn tài khoản khác hoặc quên mật khẩu!')
                 return false
             }
 
             const c_user = await userModel.create(body)
-            const token = await jwtModule.endcodedToken(c_user._id)
 
+            const token = await jwtModule.endcodedToken(c_user._id)
             if (!token) {
                 this.setMessage('Đã đăng ký thành công, vui lòng đăng nhập!')
                 return false
             }
 
-            const c_history = historyService.add(c_user._id, e_ActiveType.REGISTER, e_HistoryType.ACCESS)
+            const c_history = await historyService.add(c_user._id, e_ActiveType.REGISTER, e_HistoryType.ACCESS)
             if (!c_history) {
                 this.setMessage('Đã đăng ký thành công, vì một số vấn đề nên vui lòng xác minh E-mail!')
                 return false
             }
 
+
             this.setMessage('Đăng ký tài khoản ITBlog thành công!')
             await redis_client.set(this.random, token)
 
-            return { token_id: this.random }
+            return { token_id: this.random, username: c_user.email.replace(/@(\D*)/, '') }
 
         } catch (error: any) {
             this.setMessage(error.message)
@@ -65,7 +66,31 @@ class UserService {
         }
     }
 
-    public async tokenRedius(params: any){
+    public async login(user: any, ip: string) {
+        try {
+            const token = await jwtModule.endcodedToken(user._id)
+            if (!token) {
+                this.setMessage('Lỗi kết nối, Vui lòng thử lại sau!')
+                return false
+            }
+
+            const c_history = await historyService.add(user._id, e_ActiveType.LOGIN, e_HistoryType.ACCESS)
+            if (!c_history) {
+                this.setMessage('Lỗi kết nối, Vui lòng thử lại sau!')
+                return false
+            }
+
+            this.setMessage('Đăng nhập tài khoản ITBlog thành công!')
+            await redis_client.set(this.random, token)
+
+            return { token_id: this.random, username: user.email.replace(/@(\D*)/, '') }
+        } catch (error: any) {
+            this.setMessage(error.message)
+            return false
+        }
+    }
+
+    public async tokenRedius(params: any) {
         try {
             const get_token = await redis_client.get(params.token_id)
             return {

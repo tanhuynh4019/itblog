@@ -17,10 +17,23 @@ class UserController {
     }
 
     public async secrettUser(req: Request, res: Response, next: NextFunction){
-        console.log(req.user)
         res.status(200).json({
-            user: req.user
+            data: req.user
         })
+    }
+
+    public async login(req: Request, res: Response, next: NextFunction){
+        try {
+            const e_user = await userService.login(req.user, req.ip)
+            if (e_user) {
+                res.status(200).json({ status: 200, error: false, message: userService.getMessage(), data: e_user })
+            } else {
+                res.status(400).json({ status: 400, error: true, message: userService.getMessage() })
+            }
+       
+        } catch (error: any) {
+            res.status(400).json({ status: 400, error: true, message: error.message })
+        }
     }
 
     public async tokenRedius(req: Request, res: Response, next: NextFunction){
