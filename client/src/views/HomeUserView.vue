@@ -14,7 +14,7 @@
               </p>
             </v-col>
             <v-col cols="12" md="5" lg="4" class="mt-15">
-              <RegisterComponent v-if="!onResize.isMobile  && !onResize.isIpad" :website="website" :user="user" />
+              
             </v-col>
           </v-row>
         </v-container>
@@ -52,13 +52,11 @@ import Vue from 'vue'
 
 import UploadApi from '../api/upload.api'
 
-import RegisterComponent from '../components/Auth/Register.vue';
-
 export default Vue.extend({
-  name: 'Home',
+  name: 'HomeUser',
   props: ['website', 'user', 'onResize'],
   components: {
-    RegisterComponent,
+   
   },
   data() {
     return {

@@ -14,6 +14,7 @@ app.use(express.json())
 app.use(express.urlencoded({
     extended: true
 }))
+app.use('', express.static(__dirname + '/uploads'))
 
 // ** Connect to Mongo **
 mongoose.connect(config.mongo.url, config.mongo.options).then((client) => {

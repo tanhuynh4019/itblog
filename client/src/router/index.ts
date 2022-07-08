@@ -6,6 +6,8 @@ import LoginView from '../views/user/LoginView.vue'
 import RegisterView from '../views/user/RegisterView.vue'
 import ProfileView from '../views/user/ProfileView.vue'
 
+import HomeUserView from '../views/HomeUserView.vue'
+
 import Error404View from '../views/error/Error404View.vue'
 
 Vue.use(VueRouter)
@@ -15,6 +17,11 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/home',
+    name: 'homeuser',
+    component: HomeUserView
   },
   {
     path: '/login',

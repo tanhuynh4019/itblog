@@ -76,13 +76,13 @@ export default Vue.extend({
   }),
   mounted() {
     if (this.user) {
-      this.$router.push({ name: 'error404' })
+      this.$router.push({ name: 'homeuser' })
     }
   },
   watch: {
     user() {
       if (this.user) {
-        this.$router.push({ name: 'error404' })
+        this.$router.push({ name: 'homeuser' })
       }
     }
   },

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 
+
 class BcryptClass {
     public async hashPassword(password: string) {
         const salt: string = await bcrypt.genSalt(10)
