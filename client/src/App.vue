@@ -4,9 +4,10 @@
     <HeaderComponent :on-resize="{ isMobile, isIpad, isLaptop, isDesktop }" :user="user" :website="website" />
 
     <v-main>
-      <router-view :on-resize="{ isMobile, isIpad, isLaptop, isDesktop }" :website="website" @showSnackbar="snackbar = $event" :user="user" @userEmit="user = $event" />
+      <router-view :on-resize="{ isMobile, isIpad, isLaptop, isDesktop }" :website="website"
+        @showSnackbar="snackbar = $event" :user="user" @userEmit="user = $event" />
 
-      <v-snackbar v-model="snackbar.snackbar" :timeout="timeout" top>
+      <v-snackbar v-model="snackbar.snackbar" :timeout="timeout" bottom left>
         {{ snackbar.text }}
 
         <template v-slot:action="{ attrs }">
@@ -78,8 +79,7 @@ export default Vue.extend({
       else if (that.windowSize.x < 960) {
         that.isIpad = true;
       }
-      else if(that.windowSize.x < 1264)
-      {
+      else if (that.windowSize.x < 1264) {
         that.isLaptop = true;
       }
       else {
@@ -112,5 +112,13 @@ export default Vue.extend({
 
 a {
   text-decoration: none !important;
+}
+
+.no-shadow {
+  box-shadow: none !important;
+}
+
+.container {
+  max-width: 1500px;
 }
 </style>

@@ -17,9 +17,17 @@ class UserController {
     }
 
     public async secrettUser(req: Request, res: Response, next: NextFunction){
-        res.status(200).json({
-            data: req.user
-        })
+        try {
+            const g_user = await userService.getUser(req.user)
+            if (g_user) {
+                res.status(200).json({ status: 200, error: false, message: userService.getMessage(), data: g_user })
+            } else {
+                res.status(400).json({ status: 400, error: true, message: userService.getMessage() })
+            }
+       
+        } catch (error: any) {
+            res.status(400).json({ status: 400, error: true, message: error.message })
+        }
     }
 
     public async login(req: Request, res: Response, next: NextFunction){

@@ -5,6 +5,9 @@ class UploadApi {
         if (folder == 'feature') {
             return this.url + '/website/features/';
         }
+        else if (folder == 'user') {
+            return this.url + '/website/user/';
+        }
         else{
             return this.url;
         }

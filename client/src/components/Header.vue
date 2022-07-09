@@ -12,7 +12,7 @@
                         <v-col cols="11" v-if="onResize.isLaptop || onResize.isDesktop">
                             <div class="ml-5">
                                 <v-btn :small="onResize.isLaptop" :color="website.color.main" text v-for="menu in menus"
-                                    :key="menu.name" style="text-transform: none !important;">
+                                    :to="menu.link" :key="menu.name" style="text-transform: none !important;">
                                     {{ menu.name }}
                                 </v-btn>
                             </div>
@@ -29,14 +29,42 @@
                     </v-app-bar-nav-icon>
                 </div>
                 <div class="float-end" v-if="user">
-                    <div class="text-center">
-                        <v-avatar size="32">
-                            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
-                        </v-avatar>
-                        <div class="text--secondary">{{ user.email.replace(/@(\D*)/, '') }} <v-icon>mdi-menu-down
-                            </v-icon>
-                        </div>
-                    </div>
+                    <v-btn icon>
+                        <v-icon size="30">mdi-bell-outline</v-icon>
+                    </v-btn>
+                    <v-menu :close-on-content-click="false" :nudge-width="200" offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn icon v-bind="attrs" v-on="on">
+                                <v-icon size="30">mdi-account-reactivate</v-icon>
+                            </v-btn>
+                        </template>
+
+                        <v-card>
+                            <v-list-item-group :color="website.color.main">
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            Thông tin tài khoản
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item :to="{ path: `/profile/${user.profile_name}` }">
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            Hồ sơ của tôi
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            Thoát
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list-item-group>
+                        </v-card>
+                    </v-menu>
                 </div>
             </v-responsive>
         </v-app-bar>
@@ -44,7 +72,7 @@
         <v-navigation-drawer v-model="drawer" fixed temporary>
             <v-list nav dense>
                 <v-list-item-group :color="website.color.main">
-                    <v-list-item v-for="(menu, i) in menus" :key="i">
+                    <v-list-item v-for="(menu, i) in menus" :key="i" :to="menu.link">
 
                         <v-list-item-content>
                             <v-list-item-title v-text="menu.name"></v-list-item-title>
@@ -71,48 +99,66 @@ export default Vue.extend({
                     icon: '',
                     disabled: '',
                     tooltip: '',
+                    link: {
+                        name: 'homeuser'
+                    }
                 },
                 {
                     name: 'Hội nhóm IT',
                     icon: '',
                     disabled: '',
                     tooltip: '',
+                    link: ''
                 },
                 {
                     name: 'Học tập',
                     icon: '',
                     disabled: '',
                     tooltip: '',
+                    link: {
+                        name: 'learning'
+                    }
                 },
                 {
                     name: 'Vua Fix bug',
                     icon: '',
                     disabled: '',
                     tooltip: '',
+                    link: ''
                 },
                 {
                     name: 'Cuộc sống IT',
                     icon: '',
                     disabled: '',
                     tooltip: '',
+                    link: {
+                        name: 'lifeit'
+                    }
                 },
                 {
                     name: 'Chia sẻ',
                     icon: '',
                     disabled: '',
                     tooltip: '',
+                    link: {
+                        name: 'post'
+                    }
                 },
                 {
                     name: 'Chứng chỉ Free',
                     icon: '',
                     disabled: '',
                     tooltip: '',
+                    link: ''
                 },
                 {
                     name: 'Inter View',
                     icon: '',
                     disabled: '',
                     tooltip: '',
+                    link: {
+                        name: 'interview'
+                    }
                 }
             ]
         }

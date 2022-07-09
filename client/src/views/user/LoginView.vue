@@ -110,7 +110,7 @@ export default Vue.extend({
             const g_user: any = await UserApi.getAuth();
             that.$emit('userEmit', g_user.data);
 
-            that.$router.push({ path: `/profile/${e_user.data.username}` })
+            that.$router.push({ name: 'homeuser' })
           } else {
             that.$emit('showSnackbar', { snackbar: true, text: e_user.message });
             that.isLoadingSave = false;

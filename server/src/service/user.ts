@@ -8,6 +8,7 @@ import e_ActiveType from '../common/activity_type.enum'
 import e_HistoryType from '../common/history.enum'
 
 import historyService from '../service/history'
+import itBlogProfile from '../service/it_blog_profile'
 
 const redis_client = createClient()
 redis_client.connect()
@@ -54,6 +55,12 @@ class UserService {
                 return false
             }
 
+            const c_profile = await itBlogProfile.add_new_contructor(c_user._id,  c_user.email.replace(/@(\D*)/, ''))
+            if(!c_profile){
+                this.setMessage('Đã đăng ký nhưng lỗi xác thực thông tin, hãy đăng nhập và xác nhận email!')
+                return false
+            }
+
 
             this.setMessage('Đăng ký tài khoản ITBlog thành công!')
             await redis_client.set(this.random, token)
@@ -96,6 +103,23 @@ class UserService {
             return {
                 get_token
             }
+        } catch (error: any) {
+            this.setMessage(error.message)
+            return false
+        }
+    }
+
+    public async getUser(user: any) {
+        try {
+
+            const g_profile: any = await itBlogProfile.getProfile(user)
+            const g_user = {
+                email: user.email,
+                exp: user.exp,
+                profile_name: g_profile.profile_name,
+            }
+
+            return g_user
         } catch (error: any) {
             this.setMessage(error.message)
             return false

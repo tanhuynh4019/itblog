@@ -2,10 +2,12 @@ import { Request, Response, NextFunction, Application, ErrorRequestHandler } fro
 import createHttpError from 'http-errors'
 
 import userRouter from './user/user'
+import profileRouter from './user/profile'
 
 const router = (app: Application) => {
 
     app.use(userRouter)
+    app.use(profileRouter)
 
     app.use((req: Request, res: Response, next: NextFunction) => {
         next(new createHttpError.NotFound())

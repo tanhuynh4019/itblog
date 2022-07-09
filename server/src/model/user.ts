@@ -23,7 +23,8 @@ const userSchema: Schema = new Schema({
     start_date: { type: Date, default: Date.now() },
     updated_date: { type: Date, default: null },
     login_date: { type: Date, default: Date.now() },
-    vip_expiration_date: { type: Date, default: null }
+    vip_expiration_date: { type: Date, default: null },
+    exp: { type: Number, default: 0 },
 })
 
 export default mongoose.model<IUser>('User', userSchema)

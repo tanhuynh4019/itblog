@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-sheet class="home">
-      <v-img :height="onResize.isMobile? 450 : onResize.isIpad ? 360 : 780" src="../images/banner/banner1.jpg">
+      <v-img :height="onResize.isMobile ? 450 : onResize.isIpad ? 360 : 780" src="../images/banner/banner1.jpg">
         <v-container>
           <v-row :class="onResize.isMobile || onResize.isIpad ? 'text-center' : ''">
             <v-col cols="12" md="7" lg="8" class="left-introduct">
@@ -14,7 +14,8 @@
               </p>
             </v-col>
             <v-col cols="12" md="5" lg="4" class="mt-15">
-              <RegisterComponent v-if="!onResize.isMobile  && !onResize.isIpad" :website="website" :user="user" />
+              <RegisterComponent v-if="!onResize.isMobile && !onResize.isIpad" :website="website" :user="user"
+                @userEmit="user = $event" @showSnackbar="snackbar = $event" />
             </v-col>
           </v-row>
         </v-container>
@@ -60,8 +61,21 @@ export default Vue.extend({
   components: {
     RegisterComponent,
   },
+  watch: {
+    user() {
+      if (this.user) {
+        this.$router.push({ name: 'homeuser' })
+        this.$emit('userEmit', this.user)
+      }
+    },
+    snackbar() {
+      this.$emit('showSnackbar', this.snackbar)
+    }
+  },
   data() {
     return {
+      snackbar: null,
+      user_new: undefined,
       urlImageFeature: '',
       features: [
         {
@@ -120,16 +134,16 @@ export default Vue.extend({
   font-size: 28px;
 }
 
-h1{
+h1 {
   font-size: 42px;
 }
 
-h2{
+h2 {
   opacity: 0.8;
   color: #006064
 }
 
-p{
+p {
   font-size: 16px;
 }
 </style>

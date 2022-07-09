@@ -1,45 +1,55 @@
 <template>
   <div>
-    <v-sheet class="home">
-      <v-img :height="onResize.isMobile? 450 : onResize.isIpad ? 360 : 780" src="../images/banner/banner1.jpg">
-        <v-container>
-          <v-row :class="onResize.isMobile || onResize.isIpad ? 'text-center' : ''">
-            <v-col cols="12" md="7" lg="8" class="left-introduct">
-              <h1 class="text-main">NỀN TẢNG KẾT NỐI IT</h1>
-              <P class="text-sub">
-                Chúng tôi mang kiến thức và trải nghiệm IT miễn phí đến cho bạn
-              </P>
-              <p class="text-sub font-weight-bold">
-                Nếu bạn là Dev. OK website này dành cho bạn
-              </p>
-            </v-col>
-            <v-col cols="12" md="5" lg="4" class="mt-15">
-              
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-img>
-    </v-sheet>
-    <v-sheet class="mt-15">
-      <v-img height="780" src="../images/banner/banner2.png">
-        <v-container>
-          <h1 class="text-center cyan--text text--darken-4">Chúng tôi làm gì cho bạn</h1>
-          <v-row>
-            <v-col cols="5" lg="5">
+    <v-sheet class="wrap-block-user" :color="website.color.main" dark>
+      <v-container>
+        <h3 class="mt-5">Xin chào <b class="cyan--text text--lighten-4">{{ user.email }}</b>. Chào mừng bạn đến với
+          ITblog. Thông số của bạn</h3>
 
-            </v-col>
-            <v-col cols="7" lg="7" class="mt-15">
-              <div v-for="feature in features" :key="feature.text">
-                <v-img class="float-start" :src="feature.icon" width="30" />
-                <div>
-                  <h2 class="ml-5 float-start">{{ feature.text }}</h2>
-                  <p class="float-start mt-2">{{ feature.content }}</p>
-                </div>
+        <v-row class="mt-5">
+          <v-col cols="5">
+            <v-sheet color="#00838F" class="rounded">
+              <div class="pa-2">
+                <v-row no-gutters class="mt-3">
+                  <v-col cols="3">
+                    <center>
+                      <v-avatar size="65">
+                        <v-img src="../images/icon/programmer.png"></v-img>
+                      </v-avatar>
+                    </center>
+                  </v-col>
+                  <v-col cols="9">
+                    <h2 class="white--text">{{profile.profile_name}}</h2>
+                    <p>
+                      Kỹ thuật phần mềm - Đại học Thủ Dầu Một - Bình Dương
+                    </p>
+                  </v-col>
+                  <v-col cols="12">
+                    <b class="yellow--text">{{ user.exp }} EXP</b> Quy định và lợi ích
+                    <v-progress-linear class="mt-2" rounded color="lime" height="20" :value="user.exp" striped>
+                    </v-progress-linear>
+                    <v-row class="mt-1">
+                      <v-col cols="4">
+                        Cấp 1
+                      </v-col>
+                      <v-col cols="4" class="text-center">
+                        0/50
+                      </v-col>
+                      <v-col cols="4">
+                        <span class="float-end">
+                          Cấp độ 2
+                        </span>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
               </div>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-img>
+            </v-sheet>
+          </v-col>
+          <v-col cols="7">
+            a
+          </v-col>
+        </v-row>
+      </v-container>
     </v-sheet>
     <v-sheet class="mt-5" style="height: 1000px;">
 
@@ -51,15 +61,30 @@
 import Vue from 'vue'
 
 import UploadApi from '../api/upload.api'
+import ProfileApi from '../api/profile.api'
 
 export default Vue.extend({
   name: 'HomeUser',
   props: ['website', 'user', 'onResize'],
   components: {
-   
+
+  },
+  created(){
+    let that = this
+    that.loadProfile();
+  },
+  watch: {
+    user() {
+      if (!this.user) {
+        this.$router.push({ name: 'home' })
+      }
+    }
   },
   data() {
     return {
+      profile: {
+        profile_name: ''
+      },
       urlImageFeature: '',
       features: [
         {
@@ -100,6 +125,13 @@ export default Vue.extend({
         },
       ]
     }
+  },
+  methods: {
+    async loadProfile(){
+      let that = this;
+      const g_profile: any = await ProfileApi.getProfile();
+      that.profile = g_profile.data;
+    }
   }
 })
 </script>
@@ -118,16 +150,16 @@ export default Vue.extend({
   font-size: 28px;
 }
 
-h1{
+h1 {
   font-size: 42px;
 }
 
-h2{
+h2 {
   opacity: 0.8;
   color: #006064
 }
 
-p{
+p {
   font-size: 16px;
 }
 </style>
