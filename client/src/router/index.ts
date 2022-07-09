@@ -21,6 +21,7 @@ import EyePostView from '../views/post/EyePostView.vue'
 import InterViewView from '../views/interview/IntervVewView.vue'
 import CreateInterViewView from '../views/interview/CreateViewView.vue'
 import EyeInterViewView from '../views/interview/EyeInterViewView.vue'
+import EditInterViewView from '../views/interview/EditInterViewView.vue'
 
 import Error404View from '../views/error/Error404View.vue'
 
@@ -106,6 +107,11 @@ const routes: Array<RouteConfig> = [
     path: '/inter-view/eye/:slug',
     name: 'eyeinterview',
     component: EyeInterViewView
+  },
+  {
+    path: '/inter-view/edit/:id',
+    name: 'editinterview',
+    component: EditInterViewView
   }
 ]
 

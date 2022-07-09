@@ -87,7 +87,7 @@
 
                                 <div class="float-end mt-5">
                                     <v-btn depressed outlined :color="website.color.main" dark>Hủy</v-btn>
-                                    <v-btn @click="createInterView()" depressed class="ml-2" :color="website.color.main" dark>Đăng</v-btn>
+                                    <v-btn depressed class="ml-2" :color="website.color.main" dark>Đăng</v-btn>
                                 </div>
 
                             </v-col>
@@ -147,10 +147,9 @@ import Vue from 'vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import uploadApi from '../../api/upload.api';
-import InterViewApi from '../../api/intert_view.api';
 
 export default Vue.extend({
-    name: 'CreateInterView',
+    name: 'EditInterView',
     props: ['website', 'user', 'onResize'],
     components: {
 
@@ -213,19 +212,6 @@ export default Vue.extend({
             else {
                 that.imageNew = that.getImageCommon('none_img.png')
             }
-        },
-        async createInterView(){
-            let that = this;
-            const formData = new FormData();
-            const data = that.interviewForm.value;
-            
-            formData.append('image', data.image as any);
-            formData.append('name', data.name);
-            formData.append('description', data.description);
-            formData.append('content', data.content);
-
-            const c_inter_view = await InterViewApi.addInterView(formData);
-            console.log(c_inter_view);
         }
     }
 })

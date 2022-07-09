@@ -11,7 +11,7 @@
                         </v-col>
                         <v-col cols="11" v-if="onResize.isLaptop || onResize.isDesktop">
                             <div class="ml-5">
-                                <v-btn :small="onResize.isLaptop" :color="website.color.main" text v-for="menu in menus"
+                                <v-btn :small="onResize.isLaptop" :color="website.color.main" text v-for="menu in menus" :disabled="menu.disabled"
                                     :to="menu.link" :key="menu.name" style="text-transform: none !important;">
                                     {{ menu.name }}
                                 </v-btn>
@@ -97,7 +97,7 @@ export default Vue.extend({
                 {
                     name: 'Trang chủ',
                     icon: '',
-                    disabled: '',
+                    disabled: false,
                     tooltip: '',
                     link: {
                         name: 'homeuser'
@@ -106,14 +106,14 @@ export default Vue.extend({
                 {
                     name: 'Hội nhóm IT',
                     icon: '',
-                    disabled: '',
+                    disabled: true,
                     tooltip: '',
                     link: ''
                 },
                 {
                     name: 'Học tập',
                     icon: '',
-                    disabled: '',
+                    disabled: false,
                     tooltip: '',
                     link: {
                         name: 'learning'
@@ -122,14 +122,14 @@ export default Vue.extend({
                 {
                     name: 'Vua Fix bug',
                     icon: '',
-                    disabled: '',
+                    disabled: true,
                     tooltip: '',
                     link: ''
                 },
                 {
                     name: 'Cuộc sống IT',
                     icon: '',
-                    disabled: '',
+                    disabled: false,
                     tooltip: '',
                     link: {
                         name: 'lifeit'
@@ -138,23 +138,23 @@ export default Vue.extend({
                 {
                     name: 'Chia sẻ',
                     icon: '',
-                    disabled: '',
+                    disabled: false,
                     tooltip: '',
                     link: {
                         name: 'post'
                     }
                 },
                 {
-                    name: 'Chứng chỉ Free',
+                    name: 'Tuyển dụng',
                     icon: '',
-                    disabled: '',
+                    disabled: true,
                     tooltip: '',
                     link: ''
                 },
                 {
                     name: 'Inter View',
                     icon: '',
-                    disabled: '',
+                    disabled: false,
                     tooltip: '',
                     link: {
                         name: 'interview'

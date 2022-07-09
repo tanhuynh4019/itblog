@@ -25,6 +25,7 @@
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0",
         "redis": "^4.1.1",
+        "slugify": "^1.6.5",
         "validator": "^13.7.0"
     },
     "devDependencies": {

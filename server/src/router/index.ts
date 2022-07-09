@@ -3,11 +3,13 @@ import createHttpError from 'http-errors'
 
 import userRouter from './user/user'
 import profileRouter from './user/profile'
+import interViewRouter from './user/inter_view'
 
 const router = (app: Application) => {
 
     app.use(userRouter)
     app.use(profileRouter)
+    app.use(interViewRouter)
 
     app.use((req: Request, res: Response, next: NextFunction) => {
         next(new createHttpError.NotFound())

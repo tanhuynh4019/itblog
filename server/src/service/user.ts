@@ -117,6 +117,7 @@ class UserService {
                 email: user.email,
                 exp: user.exp,
                 profile_name: g_profile.profile_name,
+                role: user.role
             }
 
             return g_user
