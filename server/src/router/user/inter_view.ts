@@ -12,5 +12,9 @@ router.post('/api/inter-view', passport.authenticate('jwt', {
     session: false
 }), multer.uploadImage('src/uploads/inter_view', 'image'), controllerInterView.addInterView)
 
+router.get('/api/inter-view/:slug', passport.authenticate('jwt', {
+    session: false
+}), controllerInterView.getInterView)
+
 export default router
 

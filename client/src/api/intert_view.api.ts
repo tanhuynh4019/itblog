@@ -16,6 +16,20 @@ class InterViewApi {
         }
     }
 
+    public async getBySlugInterView(params: any) {
+        try {
+            const {slug} = params
+            const gbs_inter_view = await axios.get(this.url + `/${slug}`, {
+                headers: {
+                    Authorization: `Bearer ${await userApi.tokenRedius()}`
+                }
+            })
+            return gbs_inter_view.data
+        } catch (error: any) {
+            return error.response.data;
+        }
+    }
+
 }
 
 export default new InterViewApi();

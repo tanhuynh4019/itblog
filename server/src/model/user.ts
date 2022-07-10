@@ -25,6 +25,11 @@ const userSchema: Schema = new Schema({
     login_date: { type: Date, default: Date.now() },
     vip_expiration_date: { type: Date, default: null },
     exp: { type: Number, default: 0 },
+    profile: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ItBlogProfile'
+    },
+
 })
 
 export default mongoose.model<IUser>('User', userSchema)

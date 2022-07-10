@@ -109,7 +109,7 @@ const routes: Array<RouteConfig> = [
     component: EyeInterViewView
   },
   {
-    path: '/inter-view/edit/:id',
+    path: '/inter-view/edit/:slug',
     name: 'editinterview',
     component: EditInterViewView
   }

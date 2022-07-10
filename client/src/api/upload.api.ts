@@ -14,6 +14,9 @@ class UploadApi {
         else if (folder == 'common') {
             return this.url + '/website/common/';
         }
+        else if (folder == 'interview') {
+            return this.url + '/inter_view/';
+        }
         else{
             return this.url;
         }

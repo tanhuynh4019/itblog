@@ -3,11 +3,9 @@
         <v-sheet :color="website.color.main">
             <v-container>
                 <h2 class="white--text">
-                    Đăng bài interview
+                    {{ interview.name }}
                 </h2>
-                <p class="white--text"> Interview là gì? Interview là thuật ngữ Tiếng Anh được dùng phổ biến trong lĩnh vực tuyển
-                    dụng. Trong từ điển Anh-Việt Interview có nghĩa là sự gặp gỡ, cuộc nói chuyện, gặp mặt, cuộc phỏng
-                    vấn/bài phỏng vấn. </p>
+                <p class="white--text" v-html="interview.description"> </p>
             </v-container>
         </v-sheet>
         <v-sheet class="mt-5" style="height: 1000px;">
@@ -47,96 +45,127 @@
                 </p>
 
                 <div v-if="user.role == 1 || user.role == 2 || user.role == 3">
+                    <v-row>
+                        <v-col cols="4">
+                            <v-card>
+                                <template slot="progress">
+                                    <v-progress-linear color="deep-purple" height="10" indeterminate>
+                                    </v-progress-linear>
+                                </template>
+                                <v-img height="250" :src="getImageInterView(interview.image.filename)">
+                                </v-img>
 
-                    <p>
-                        <b>Hướng dẫn:</b>
-                        Bạn phải tạo một khung chứa trước khi tạo câu hỏi, khung chứa bao gồm hình ảnh, mô tả, nội dung,
-                        tiêu đề. Sau khi tạo xong bạn sẽ được chuyển qua khu vực cá nhân của đề tài này, bạn có thể tạo
-                        nhiều khung và quản lý nó ở khu vực của mình.
-                    </p>
+                                <v-card-title>{{ interview.name ? interview.name : 'Trống' }}
+                                </v-card-title>
 
-                    <v-form>
-                        <v-row>
-                            <v-col cols="8">
-                                <v-text-field v-model="interviewForm.value.name" outlined label="Tiêu đề" dense
-                                    :color="website.color.main" placeholder="Tiêu đề phải từ 5 đến 250 ký tự">
-                                </v-text-field>
-                                <v-file-input @change="uploadImage()" dense v-model="interviewForm.value.image"
-                                    :color="website.color.main" counter label="Ảnh minh họa"
-                                    prepend-icon="mdi-paperclip" outlined :show-size="1000">
-                                    <template v-slot:selection="{ index, text }">
-                                        <v-chip v-if="index < 2" color="#006064" dark label small>
-                                            {{ text }}
-                                        </v-chip>
+                                <v-card-text>
+                                    <v-row align="center" class="mx-0">
+                                        <v-rating :value="5" color="amber" dense half-increments readonly size="14">
+                                        </v-rating>
 
-                                        <span v-else-if="index === 2"
-                                            class="text-overline grey--text text--darken-3 mx-2">
-                                            +{{ interviewForm.value.image.length - 2 }} File(s)
-                                        </span>
-                                    </template>
-                                </v-file-input>
-
-                                <v-textarea v-model="interviewForm.value.description" outlined label="Mô tả" dense
-                                    :color="website.color.main" placeholder="Mô tả ngắn về chủ đề Interview này">
-                                </v-textarea>
-
-                                <ckeditor :editor="editor" v-model="interviewForm.value.content" :config="editorConfig">
-                                </ckeditor>
-
-
-
-                                <div class="float-end mt-5">
-                                    <v-btn depressed outlined :color="website.color.main" dark>Hủy</v-btn>
-                                    <v-btn depressed class="ml-2" :color="website.color.main" dark>Đăng</v-btn>
-                                </div>
-
-                            </v-col>
-                            <v-col cols="4">
-                                <v-card>
-                                    <template slot="progress">
-                                        <v-progress-linear color="deep-purple" height="10" indeterminate>
-                                        </v-progress-linear>
-                                    </template>
-
-                                    <v-img height="250" :src="imageNew">
-                                    </v-img>
-
-                                    <v-card-title>{{ interviewForm.value.name ? interviewForm.value.name : 'Trống' }}
-                                    </v-card-title>
-
-                                    <v-card-text>
-                                        <v-row align="center" class="mx-0">
-                                            <v-rating :value="5" color="amber" dense half-increments readonly size="14">
-                                            </v-rating>
-
-                                            <div class="grey--text ms-4">
-                                                0 (0)
-                                            </div>
-                                        </v-row>
-
-                                        <div class="my-4 text-subtitle-1">
-                                            By {{ user.profile_name }}
+                                        <div class="grey--text ms-4">
+                                            0 (0)
                                         </div>
+                                    </v-row>
 
-                                        <div>{{ interviewForm.value.description ? interviewForm.value.description :
-                                                "Trống"
-                                        }}</div>
-                                    </v-card-text>
+                                    <div class="my-4 text-subtitle-1">
+                                        By {{ user.profile_name }}
+                                    </div>
 
-                                    <v-divider class="mx-4"></v-divider>
+                                    <div>{{ interview.description ? interview.description :
+                                            "Trống"
+                                    }}</div>
+                                </v-card-text>
 
-                                    <v-card-title>Đang có 0 câu hỏi</v-card-title>
+                                <v-divider class="mx-4"></v-divider>
 
-                                    <v-card-actions>
-                                        <v-btn color="deep-purple lighten-2" text>
-                                            Bắt đầu
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                    </v-form>
+                                <v-card-title>Đang có 0 câu hỏi</v-card-title>
+
+                                <v-card-actions>
+                                    <v-btn color="deep-purple lighten-2" text>
+                                        Bắt đầu
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+
+                        </v-col>
+                        <v-col cols="8">
+                            <v-row>
+                                <v-col cols="8">
+                                    <b>Chú ý:</b> Hãy xoanh quanh những vấn đề liên quan đến chủ đề "{{ interview.name
+                                    }}", bài
+                                    viết này sẽ được kiểm duyệt nếu bạn là editor. Các ADMIN, SUPERADMIN có thể đăng tải
+                                    tùy ý.
+                                </v-col>
+                                <v-col cols="4">
+                                    <v-btn @click="clickDialogSaveQuestion()" class="float-end" depressed
+                                        :color="website.color.main" dark>Thêm câu hỏi
+                                    </v-btn>
+                                </v-col>
+                                <v-col cols="12">
+
+                                </v-col>
+                            </v-row>
+                        </v-col>
+                    </v-row>
                 </div>
+
+                <v-dialog v-model="dialogSaveQuestion" scrollable max-width="800px">
+                    <v-card>
+                        <v-card-title>{{ titleDialog }}</v-card-title>
+                        <v-divider></v-divider>
+                        <v-card-text style="height: 600px;">
+
+                            <v-form v-model="interviewQuestionForm.valid" ref="interviewQuestionForm">
+                                <div class="mt-2"></div>
+                                <b>Câu hỏi</b>
+                                <ckeditor v-model="interviewQuestionForm.value.question" :editor="editor"
+                                    :config="editorConfig">
+                                </ckeditor>
+                                <br />
+                                <b>Câu trả lời</b>
+                                <ckeditor v-model="interviewQuestionForm.value.answer" :editor="editor"
+                                    :config="editorConfig">
+                                </ckeditor>
+                                <br />
+                                <b>Trả lời ngắn gọn</b>
+                                <ckeditor v-model="interviewQuestionForm.value.answer_good" :editor="editor"
+                                    :config="editorConfig">
+                                </ckeditor>
+                                <br />
+                                <b>Mức độ</b>
+                                <v-chip-group v-model="interviewQuestionForm.value.level" active-class="red--text"
+                                    column>
+                                    <v-chip v-for="level in levels" :key="level">
+                                        {{ level }}
+                                    </v-chip>
+                                </v-chip-group>
+                                <br />
+                                <b>Nhân vật phù hợp</b>
+                                <v-chip-group v-model="interviewQuestionForm.value.figure" active-class="red--text"
+                                    column>
+                                    <v-chip v-for="figure in figures" :key="figure">
+                                        {{ figure }}
+                                    </v-chip>
+                                </v-chip-group>
+                                <br />
+                                <v-switch v-model="interviewQuestionForm.value.is_active" :color="website.color.main"
+                                    :label="interviewQuestionForm.value.is_active ? 'Cho phép hiển thị sau khi đăng câu hỏi' : 'không cho phép hiển thị sau khi đăng câu hỏi'">
+                                </v-switch>
+                            </v-form>
+
+                        </v-card-text>
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-btn color="blue darken-1" text @click="dialogSaveQuestion = false">
+                                Đóng
+                            </v-btn>
+                            <v-btn @click="addInterViewQuestion()" color="blue darken-1" text>
+                                Lưu
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
             </v-container>
         </v-sheet>
     </div>
@@ -147,6 +176,8 @@ import Vue from 'vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import uploadApi from '../../api/upload.api';
+import InterViewApi from '../../api/intert_view.api';
+import InterViewQuestion from '../../api/inter_view_question';
 
 export default Vue.extend({
     name: 'EditInterView',
@@ -164,9 +195,15 @@ export default Vue.extend({
     created() {
         let that = this
         that.imageNew = that.getImageCommon('none_img.png');
-    },  
+        that.finBySlugInterView();
+    },
     data() {
         return {
+            levels: ['Dễ', 'Trung bình', 'Khó', 'Rất khó'],
+            figures: ['Freser', 'Inter', 'Junior', 'Mid-Level', 'Senior',],
+            titleDialog: '',
+            dialogSaveQuestion: false,
+            interview: {} as any,
             imageNew: '' as any,
             editor: ClassicEditor,
             editorConfig: {
@@ -184,10 +221,27 @@ export default Vue.extend({
                     image: [],
                     content: ''
                 }
-            }
+            },
+            interviewQuestionForm: {
+                valid: true,
+                validate: {},
+                value: {
+                    question: '',
+                    answer: '',
+                    answer_good: '',
+                    level: 0 as any,
+                    figure: 0 as any,
+                    is_active: true as any
+                },
+            },
         }
     },
     methods: {
+        clickDialogSaveQuestion() {
+            let that = this;
+            that.dialogSaveQuestion = true;
+            that.titleDialog = 'Thêm câu hỏi và câu trả lời cho chủ đề: ' + that.interview.name
+        },
         getImageUser(filename: string) {
             return uploadApi.getImage('user') + filename;
         },
@@ -196,6 +250,9 @@ export default Vue.extend({
         },
         getImageCommon(filename: string) {
             return uploadApi.getImage('common') + filename;
+        },
+        getImageInterView(filename: string) {
+            return uploadApi.getImage('interview') + filename;
         },
         uploadImage() {
             let that = this;
@@ -212,6 +269,27 @@ export default Vue.extend({
             else {
                 that.imageNew = that.getImageCommon('none_img.png')
             }
+        },
+        async finBySlugInterView() {
+            let that = this;
+            const gbs_inter_view = await InterViewApi.getBySlugInterView({ slug: that.$route.params.slug });
+            console.log(gbs_inter_view);
+            that.interview = gbs_inter_view.data;
+        },
+        async addInterViewQuestion() { 
+            let that = this;
+            const formData = new FormData();
+            const data = that.interviewQuestionForm.value;
+            formData.append('question', data.question);
+            formData.append('answer', data.answer);
+            formData.append('answer_good', data.answer_good);
+            formData.append('is_active', data.is_active);
+            formData.append('level', data.level);
+            formData.append('figure', data.figure);
+            formData.append('id_inter_view', that.interview._id);
+
+            const c_inter_view_question = await InterViewQuestion.addInterViewQuestion(formData)
+            console.log(c_inter_view_question);
         }
     }
 })

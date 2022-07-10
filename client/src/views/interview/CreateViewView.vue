@@ -5,7 +5,8 @@
                 <h2 class="white--text">
                     Đăng bài interview
                 </h2>
-                <p class="white--text"> Interview là gì? Interview là thuật ngữ Tiếng Anh được dùng phổ biến trong lĩnh vực tuyển
+                <p class="white--text"> Interview là gì? Interview là thuật ngữ Tiếng Anh được dùng phổ biến trong lĩnh
+                    vực tuyển
                     dụng. Trong từ điển Anh-Việt Interview có nghĩa là sự gặp gỡ, cuộc nói chuyện, gặp mặt, cuộc phỏng
                     vấn/bài phỏng vấn. </p>
             </v-container>
@@ -87,7 +88,8 @@
 
                                 <div class="float-end mt-5">
                                     <v-btn depressed outlined :color="website.color.main" dark>Hủy</v-btn>
-                                    <v-btn @click="createInterView()" depressed class="ml-2" :color="website.color.main" dark>Đăng</v-btn>
+                                    <v-btn @click="createInterView()" :loading="isLoadingSave" depressed class="ml-2" :color="website.color.main"
+                                        dark>Đăng</v-btn>
                                 </div>
 
                             </v-col>
@@ -165,9 +167,10 @@ export default Vue.extend({
     created() {
         let that = this
         that.imageNew = that.getImageCommon('none_img.png');
-    },  
+    },
     data() {
         return {
+            isLoadingSave: false,
             imageNew: '' as any,
             editor: ClassicEditor,
             editorConfig: {
@@ -214,18 +217,33 @@ export default Vue.extend({
                 that.imageNew = that.getImageCommon('none_img.png')
             }
         },
-        async createInterView(){
+        async createInterView() {
             let that = this;
             const formData = new FormData();
             const data = that.interviewForm.value;
-            
+
             formData.append('image', data.image as any);
             formData.append('name', data.name);
             formData.append('description', data.description);
             formData.append('content', data.content);
 
             const c_inter_view = await InterViewApi.addInterView(formData);
-            console.log(c_inter_view);
+
+            if (c_inter_view === 'Unauthorized') {
+                that.$emit('showSnackbar', { snackbar: true, text: 'Hết phiên đăng nhập!' });
+                that.isLoadingSave = false;
+            }
+            else {
+
+                if (!c_inter_view.error) {
+                    that.isLoadingSave = false;
+                    that.$emit('showSnackbar', { snackbar: true, text: c_inter_view.message });
+                    that.$router.push({ path: `/inter-view/edit/${c_inter_view.data.slug}` })
+                } else {
+                    that.$emit('showSnackbar', { snackbar: true, text: c_inter_view.message });
+                    that.isLoadingSave = false;
+                }
+            }
         }
     }
 })

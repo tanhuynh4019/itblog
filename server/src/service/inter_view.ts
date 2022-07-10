@@ -4,6 +4,7 @@ import interViewModel from '../model/inter_view'
 
 import e_ActiveType from '../common/activity_type.enum'
 import e_HistoryType from '../common/history.enum'
+import e_ROLE from '../common/role.enum'
 
 import historyService from '../service/history'
 
@@ -20,7 +21,16 @@ class InterViewService {
 
     public async add(body: any, file: any, user: any, ip: string) {
         try {
+            if(user.role == e_ROLE.USER){
+                this.setMessage('Bạn không có quyền đăng bài Inter view này!')
+                return false                
+            }
 
+            if(user.role > 4 || user.role < 0){
+                this.setMessage('Bạn không có quyền đăng bài Inter view này!')
+                return false
+            }
+            
             const check_exist = await interViewModel.findOne({name: body.name});
             if(check_exist) {
                 const link = __dirname + '\\uploads\\inter_view\\';
@@ -29,10 +39,14 @@ class InterViewService {
                 return false
             }
 
+            if(user.role == e_ROLE.SUPERADMIN || e_ROLE.ADMIN){
+                body.is_browser = true
+            }
+
             body.user_auth = user._id
             body.image = file
             body.slug = slugifyModule.slug(body.name)
-
+            
             const c_inter_view = await interViewModel.create(body)
 
             const c_history = await historyService.add(user._id, e_ActiveType.CREATE_INTERVIEW, e_HistoryType.ACTIVATE)
@@ -43,6 +57,46 @@ class InterViewService {
 
             this.setMessage(`Tạo Interview - ${body.name} - thành công`)
             return c_inter_view
+        } catch (error) {
+            console.log(error);
+            return false
+        }
+    }
+
+    public async findBySlug(params: any, user: any) {
+        try {
+            const { slug} = params
+            const gbs_inter_view = await interViewModel.findOne({slug})
+
+            
+            if(!gbs_inter_view){
+                this.setMessage('Không tồn tại Inter view này!')
+                return false
+            }
+
+            if(gbs_inter_view.user_auth.toString() != user._id.toString()){
+                this.setMessage('Không có quyền truy cập vào Inter view này!')
+                return false
+            }
+            this.setMessage('Đã tìm thấy dữ liệu!')
+            return gbs_inter_view
+        } catch (error) {
+            console.log(error);
+            return false
+        }
+    }
+
+    public async findByIdToUser(id_inter_view: string, user: any) {
+        try {
+            const g_inter_view = await interViewModel.findOne({_id: id_inter_view, user_auth: user._id})
+
+            
+            if(!g_inter_view){
+                this.setMessage('Không tồn tại Inter view này!')
+                return false
+            }
+            
+            return g_inter_view
         } catch (error) {
             console.log(error);
             return false
