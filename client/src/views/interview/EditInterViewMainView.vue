@@ -3,7 +3,7 @@
         <v-sheet :color="website.color.main">
             <v-container>
                 <h2 class="white--text">
-                    Đăng bài interview
+                    Cập nhật Interview: {{ interview.name }}
                 </h2>
                 <p class="white--text"> Interview là gì? Interview là thuật ngữ Tiếng Anh được dùng phổ biến trong lĩnh
                     vực tuyển
@@ -25,7 +25,7 @@
                         href: '/inter-view',
                     },
                     {
-                        text: 'Đăng bài Interview',
+                        text: `Cập nhật: ${interview.name}`,
                         disabled: true,
                     },
                 ]">
@@ -88,8 +88,8 @@
 
                                 <div class="float-end mt-5">
                                     <v-btn depressed outlined :color="website.color.main" dark>Hủy</v-btn>
-                                    <v-btn @click="createInterView()" :loading="isLoadingSave" depressed class="ml-2" :color="website.color.main"
-                                        dark>Đăng</v-btn>
+                                    <v-btn @click="editInterView()" :loading="isLoadingSave" depressed class="ml-2"
+                                        :color="website.color.main" dark>Đăng</v-btn>
                                 </div>
 
                             </v-col>
@@ -152,7 +152,7 @@ import uploadApi from '../../api/upload.api';
 import InterViewApi from '../../api/intert_view.api';
 
 export default Vue.extend({
-    name: 'CreateInterView',
+    name: 'EditInterViewMain',
     props: ['website', 'user', 'onResize'],
     components: {
 
@@ -167,9 +167,11 @@ export default Vue.extend({
     created() {
         let that = this
         that.imageNew = that.getImageCommon('none_img.png');
+        that.finByIdInterView()
     },
     data() {
         return {
+            interview: {} as any,
             isLoadingSave: false,
             imageNew: '' as any,
             editor: ClassicEditor,
@@ -201,6 +203,9 @@ export default Vue.extend({
         getImageCommon(filename: string) {
             return uploadApi.getImage('common') + filename;
         },
+        getImageInterView(filename: string) {
+            return uploadApi.getImage('interview') + filename;
+        },
         uploadImage() {
             let that = this;
             const reader = new FileReader();
@@ -217,7 +222,17 @@ export default Vue.extend({
                 that.imageNew = that.getImageCommon('none_img.png')
             }
         },
-        async createInterView() {
+        async finByIdInterView() {
+            let that = this;
+            const g_inter_view = await InterViewApi.getByIdInterView({ id: that.$route.params.id });
+            if (g_inter_view) {
+                that.interview = g_inter_view.data;
+                that.interviewForm.value = Object.assign({}, g_inter_view.data);
+                that.imageNew = that.getImageInterView(g_inter_view.data.image.filename);
+                that.interviewForm.value.image = [];
+            }
+        },
+        async editInterView() {
             let that = this;
             const formData = new FormData();
             const data = that.interviewForm.value;
@@ -227,20 +242,20 @@ export default Vue.extend({
             formData.append('description', data.description);
             formData.append('content', data.content);
 
-            const c_inter_view = await InterViewApi.addInterView(formData);
+            const e_inter_view = await InterViewApi.editInterView({id: that.$route.params.id},formData);
 
-            if (c_inter_view === 'Unauthorized') {
+            if (e_inter_view === 'Unauthorized') {
                 that.$emit('showSnackbar', { snackbar: true, text: 'Hết phiên đăng nhập!' });
                 that.isLoadingSave = false;
             }
             else {
 
-                if (!c_inter_view.error) {
+                if (!e_inter_view.error) {
                     that.isLoadingSave = false;
-                    that.$emit('showSnackbar', { snackbar: true, text: c_inter_view.message });
-                    that.$router.push({ path: `/inter-view/edit/${c_inter_view.data._id}` })
+                    that.$emit('showSnackbar', { snackbar: true, text: e_inter_view.message });
+                    that.$router.push({ path: `/inter-view/edit/${e_inter_view.data._id}` });
                 } else {
-                    that.$emit('showSnackbar', { snackbar: true, text: c_inter_view.message });
+                    that.$emit('showSnackbar', { snackbar: true, text: e_inter_view.message });
                     that.isLoadingSave = false;
                 }
             }

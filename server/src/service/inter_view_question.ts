@@ -43,9 +43,7 @@ class InterViewQuestionService {
 
     public async getByIdToInterView(params: any, user: any) {
         try {
-            const {idInterView } = params
-
-            console.log(idInterView);
+            const { idInterView } = params
 
             const check_exist = await interViewModel.findById(idInterView)
             if(!check_exist) {
@@ -58,8 +56,9 @@ class InterViewQuestionService {
                 return false
             }
 
-            const g_inter_view_question = await interViewQuestionModel.find({interview: check_exist._id})
-            console.log(g_inter_view_question);
+            const g_inter_view_question = await interViewQuestionModel.find({interview: check_exist._id}).sort({
+                create_date: -1
+            })
 
             return g_inter_view_question
         } catch (error) {

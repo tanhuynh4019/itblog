@@ -73,7 +73,7 @@
                                             <v-btn text :color="website.color.main">
                                                 <v-icon>mdi-eye</v-icon> Xem
                                             </v-btn>
-                                            <v-btn text :color="website.color.main" :to="{ path: `/inter-view/edit/${interview.slug}` }">
+                                            <v-btn text :color="website.color.main" :to="{ path: `/inter-view/edit/${interview._id}` }">
                                                 <v-icon>mdi-pencil</v-icon> Sửa
                                             </v-btn>
                                             <v-btn text :color="website.color.main">

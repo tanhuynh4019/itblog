@@ -58,6 +58,13 @@
                                 <v-card-title>{{ interview.name ? interview.name : 'Trống' }}
                                 </v-card-title>
 
+                                <div>
+                                    <v-btn class="float-end" text small :to="{path: `/inter-view-main/edit/${interview._id}`}">
+                                        <v-icon size="17">mdi-pencil</v-icon>
+                                        <span class="ml-1">Chỉnh sửa</span>
+                                    </v-btn>
+                                </div>
+
                                 <v-card-text>
                                     <v-row align="center" class="mx-0">
                                         <v-rating :value="5" color="amber" dense half-increments readonly size="14">
@@ -122,12 +129,14 @@
                                                     <h3 class="text-h5">
                                                         Tốt nhất để nghe
                                                     </h3>
-                                                    <div><p v-html="item.answer_good"></p></div>
+                                                    <div>
+                                                        <p v-html="item.answer_good"></p>
+                                                    </div>
 
                                                     <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
                                                 </v-alert>
                                                 <b>Trả lời nhanh: </b>
-                                                
+
                                             </v-expansion-panel-content>
                                         </v-expansion-panel>
                                     </v-expansion-panels>
@@ -184,7 +193,7 @@
                         </v-card-text>
                         <v-divider></v-divider>
                         <v-card-actions>
-                            <v-btn color="blue darken-1" text @click="dialogSaveQuestion = false">
+                            <v-btn color="blue darken-1" text @click="closeSaveInterViewQuestion()">
                                 Đóng
                             </v-btn>
                             <v-btn @click="addInterViewQuestion()" color="blue darken-1" text>
@@ -217,17 +226,22 @@ export default Vue.extend({
             if (!this.user) {
                 this.$router.push({ name: 'home' })
             }
-        }
+        },
+        dialogSaveQuestion(val) {
+            val || this.closeSaveInterViewQuestion()
+        },
     },
     created() {
         let that = this
         that.imageNew = that.getImageCommon('none_img.png');
-        that.finBySlugInterView();
+        that.finByIdInterView();
     },
     mounted() {
     },
     data() {
         return {
+            editedIndex: -1,
+            isLoadingSave: false,
             interviewquestions: [] as any,
             levels: ['Dễ', 'Trung bình', 'Khó', 'Rất khó'],
             figures: ['Freser', 'Inter', 'Junior', 'Mid-Level', 'Senior',],
@@ -256,6 +270,14 @@ export default Vue.extend({
                 valid: true,
                 validate: {},
                 value: {
+                    question: '',
+                    answer: '',
+                    answer_good: '',
+                    level: 0 as any,
+                    figure: 0 as any,
+                    is_active: true as any
+                },
+                valueDefault: {
                     question: '',
                     answer: '',
                     answer_good: '',
@@ -300,12 +322,20 @@ export default Vue.extend({
                 that.imageNew = that.getImageCommon('none_img.png')
             }
         },
-        async finBySlugInterView() {
+        closeSaveInterViewQuestion() {
             let that = this;
-            const gbs_inter_view = await InterViewApi.getBySlugInterView({ slug: that.$route.params.slug });
-            if (gbs_inter_view) {
-                that.interview = gbs_inter_view.data;
-                that.loadByIdToInterViewQuestion(gbs_inter_view.data._id);
+            that.dialogSaveQuestion = false
+            that.$nextTick(() => {
+                that.interviewQuestionForm.value = Object.assign({}, that.interviewQuestionForm.valueDefault)
+                that.editedIndex = -1
+            })
+        },
+        async finByIdInterView() {
+            let that = this;
+            const g_inter_view = await InterViewApi.getByIdInterView({ id: that.$route.params.id });
+            if (g_inter_view) {
+                that.interview = g_inter_view.data;
+                that.loadByIdToInterViewQuestion(g_inter_view.data._id);
             }
         },
         async addInterViewQuestion() {
@@ -321,6 +351,23 @@ export default Vue.extend({
             formData.append('id_inter_view', that.interview._id);
 
             const c_inter_view_question = await InterViewQuestion.addInterViewQuestion(formData);
+
+            if (c_inter_view_question === 'Unauthorized') {
+                that.$emit('showSnackbar', { snackbar: true, text: 'Hết phiên đăng nhập!' });
+                that.isLoadingSave = false;
+            }
+            else {
+
+                if (!c_inter_view_question.error) {
+                    that.isLoadingSave = false;
+                    that.$emit('showSnackbar', { snackbar: true, text: c_inter_view_question.message });
+                    that.interviewquestions.unshift(c_inter_view_question.data);
+                    that.closeSaveInterViewQuestion();
+                } else {
+                    that.$emit('showSnackbar', { snackbar: true, text: c_inter_view_question.message });
+                    that.isLoadingSave = false;
+                }
+            }
         },
         async loadByIdToInterViewQuestion(idInterView: string) {
             let that = this;

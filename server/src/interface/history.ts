@@ -5,5 +5,7 @@ export default interface IHistory extends Document {
     content_type: string
     history_type: string
     history_date : string
-    post_id?: string
+    post_id?: string,
+    inter_view_id: string,
+    ip: string
 }

@@ -16,15 +16,44 @@ class InterViewApi {
         }
     }
 
+    public async editInterView(params: any, body: any) {
+        try {
+            const { id } = params;
+            const e_inter_view = await axios.patch(this.url + `/${id}`, body, {
+                headers: {
+                    Authorization: `Bearer ${await userApi.tokenRedius()}`
+                }
+            })
+            return e_inter_view.data
+        } catch (error: any) {
+            return error.response.data;
+        }
+    }
+
     public async getBySlugInterView(params: any) {
         try {
-            const {slug} = params
+            const { slug } = params
             const gbs_inter_view = await axios.get(this.url + `/${slug}`, {
                 headers: {
                     Authorization: `Bearer ${await userApi.tokenRedius()}`
                 }
             })
             return gbs_inter_view.data
+        } catch (error: any) {
+            return error.response.data;
+        }
+    }
+
+    public async getByIdInterView(params: any) {
+        try {
+            const { id } = params
+            const g_inter_view = await axios.get(this.url + `-id/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${await userApi.tokenRedius()}`
+                }
+            })
+            console.log(g_inter_view);
+            return g_inter_view.data
         } catch (error: any) {
             return error.response.data;
         }
