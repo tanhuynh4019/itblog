@@ -55,7 +55,7 @@
                                         </v-list-item-title>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-list-item v-if="user.role == 1 || user.role == 2 || user.role == 3">
+                                <v-list-item v-if="user.role == 1 || user.role == 2 || user.role == 3" :to="{name: 'manageinterview'}">
                                     <v-list-item-content>
                                         <v-list-item-title>
                                             Quản lý InterView

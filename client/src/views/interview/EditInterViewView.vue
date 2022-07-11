@@ -105,21 +105,29 @@
                                 <v-col cols="12">
                                     <v-expansion-panels>
                                         <v-expansion-panel v-for="(item, index) in interviewquestions" :key="index">
-                                            <v-badge color="#B71C1C" overlap content="EASY">
-                                                <v-expansion-panel-header>
-                                                    <div>
-                                                        <span v-html="item.question"></span>
-                                                        <br />
-                                                        <v-btn depressed outlined>Hiển thị đáp án</v-btn>
-                                                    </div>
-                                                    <div>
-                                                        <v-chip color="#004D40" dark class="float-end">Junior</v-chip>
-                                                    </div>
-                                                </v-expansion-panel-header>
-                                            </v-badge>
+                                            <v-expansion-panel-header>
+                                                <div>
+                                                    <span v-html="item.question"></span>
+                                                    <br />
+                                                    <v-btn depressed outlined>Hiển thị đáp án</v-btn>
+                                                </div>
+                                                <div>
+                                                    <v-chip color="#004D40" dark class="float-end">Junior</v-chip>
+                                                </div>
+                                            </v-expansion-panel-header>
                                             <v-expansion-panel-content>
                                                 <b>Trả lời: </b>
                                                 <p v-html="item.answer"></p>
+                                                <v-alert text :color="website.color.main">
+                                                    <h3 class="text-h5">
+                                                        Tốt nhất để nghe
+                                                    </h3>
+                                                    <div><p v-html="item.answer_good"></p></div>
+
+                                                    <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
+                                                </v-alert>
+                                                <b>Trả lời nhanh: </b>
+                                                
                                             </v-expansion-panel-content>
                                         </v-expansion-panel>
                                     </v-expansion-panels>

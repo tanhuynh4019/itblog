@@ -104,6 +104,17 @@ class InterViewService {
         }
     }
 
+    public async getInterViewAuth(user: any) {
+        try {
+            const g_inter_view_auth = await interViewModel.find({user_auth: user._id})
+            this.setMessage('Đã tìm thấy dữ liệu!')
+            return g_inter_view_auth
+        } catch (error) {
+            console.log(error);
+            return false
+        }
+    }
+
     public async findByIdToUser(id_inter_view: string, user: any) {
         try {
             const g_inter_view = await interViewModel.findOne({_id: id_inter_view, user_auth: user._id})

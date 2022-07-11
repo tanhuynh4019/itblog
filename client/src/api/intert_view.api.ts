@@ -39,6 +39,19 @@ class InterViewApi {
         }
     }
 
+    public async getInterView_auth() {
+        try {
+            const g_inter_view_auth = await axios.get(this.url + `-auth`, {
+                headers: {
+                    Authorization: `Bearer ${await userApi.tokenRedius()}`
+                }
+            })
+            return g_inter_view_auth.data
+        } catch (error: any) {
+            return error.response.data;
+        }
+    }
+
 }
 
 export default new InterViewApi();
