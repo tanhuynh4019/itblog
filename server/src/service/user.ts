@@ -56,8 +56,8 @@ class UserService {
                 return false
             }
 
-            const c_profile = await itBlogProfile.add_new_contructor(c_user._id,  c_user.email.replace(/@(\D*)/, ''))
-            if(!c_profile){
+            const c_profile = await itBlogProfile.add_new_contructor(c_user._id, c_user.email.replace(/@(\D*)/, ''))
+            if (!c_profile) {
                 this.setMessage('Đã đăng ký nhưng lỗi xác thực thông tin, hãy đăng nhập và xác nhận email!')
                 return false
             }
