@@ -17,9 +17,23 @@ class InterViewController {
         }
     }
 
-    public async getInterView(req: Request, res: Response, next: NextFunction){
+    public async getBySlugInterView(req: Request, res: Response, next: NextFunction){
         try {
-            const g_inter_view = await interViewService.findBySlug(req.params, req.user)
+            const gbs_inter_view = await interViewService.findBySlug(req.params, req.user)
+            if (gbs_inter_view) {
+                res.status(200).json({ status: 200, error: false, message: interViewService.getMessage(), data: gbs_inter_view })
+            } else {
+                res.status(400).json({ status: 400, error: true, message: interViewService.getMessage() })
+            }
+       
+        } catch (error: any) {
+            res.status(400).json({ status: 400, error: true, message: error.message })
+        }
+    }
+
+    public async getInterViewPublic(req: Request, res: Response, next: NextFunction){
+        try {
+            const g_inter_view = await interViewService.getInterView_public()
             if (g_inter_view) {
                 res.status(200).json({ status: 200, error: false, message: interViewService.getMessage(), data: g_inter_view })
             } else {

@@ -14,7 +14,9 @@ router.post('/api/inter-view', passport.authenticate('jwt', {
 
 router.get('/api/inter-view/:slug', passport.authenticate('jwt', {
     session: false
-}), controllerInterView.getInterView)
+}), controllerInterView.getBySlugInterView)
+
+router.get('/api/inter-view-p', controllerInterView.getInterViewPublic)
 
 export default router
 

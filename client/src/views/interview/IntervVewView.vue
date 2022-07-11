@@ -11,19 +11,13 @@
             <v-container>
                 <v-breadcrumbs style="margin-left: -23px;" :items="[
                     {
-                        text: 'Dashboard',
+                        text: 'Trang chủ',
                         disabled: false,
-                        href: 'breadcrumbs_dashboard',
+                        href: '/',
                     },
                     {
-                        text: 'Link 1',
-                        disabled: false,
-                        href: 'breadcrumbs_link_1',
-                    },
-                    {
-                        text: 'Link 2',
+                        text: 'Danh sách Interview',
                         disabled: true,
-                        href: 'breadcrumbs_link_2',
                     },
                 ]">
                     <template v-slot:divider>
@@ -36,24 +30,24 @@
                         <v-text-field dense outlined class="w-100" placeholder="Nhập nội dung tìm kiếm"
                             :color="website.color.main" append-icon="mdi-magnify" clearable></v-text-field>
                     </v-col>
-                    <v-col cols="6">
-                        <v-btn depressed dark class="float-end" :color="website.color.main" :to="{ name: 'createinterview' }">
+                    <v-col cols="6" v-if="user">
+                        <v-btn v-if="user.role == 1 || user.role == 2 || user.role == 3" depressed dark class="float-end" :color="website.color.main" :to="{ name: 'createinterview' }">
                             Thêm Inter View</v-btn>
                     </v-col>
                 </v-row>
 
 
-                <h3>Chọn chủ đề (30 chủ đề)</h3>
+                <h3>Chọn chủ đề ({{interviews.length}} chủ đề)</h3>
                 <v-row>
-                    <v-col cols="3">
-                        <v-card class="mx-auto my-12" :to="{path: `/inter-view/eye/chua_co`}">
+                    <v-col cols="3" v-for="item in interviews" :key="item._id">
+                        <v-card class="mx-auto my-12" :to="item.is_active ? {path: `/inter-view/eye/chua_co`} : null">
                             <template slot="progress">
                                 <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
                             </template>
 
-                            <v-img height="250" src="https://thietkewebdalat.net/blog/wp-content/uploads/2020/04/javascript-la-gi.jpg"></v-img>
+                            <v-img height="250" :src="getImageInterView(item.image.filename)"></v-img>
 
-                            <v-card-title>JavaScript</v-card-title>
+                            <v-card-title>{{item.name}}</v-card-title>
 
                             <v-card-text>
                                 <v-row align="center" class="mx-0">
@@ -66,10 +60,10 @@
                                 </v-row>
 
                                 <div class="my-4 text-subtitle-1">
-                                    By tanhuynh9940
+                                    By {{item.user_auth.profile.profile_name}}
                                 </div>
 
-                                <div>Cung cấp các câu hỏi liên quan đến lập trình JavaScript, hy vọng nó sẽ hữu ích cho bạn</div>
+                                <div>{{item.description}}</div>
                             </v-card-text>
 
                             <v-divider class="mx-4"></v-divider>
@@ -77,8 +71,11 @@
                             <v-card-title>Đang có 0 câu hỏi</v-card-title>
 
                             <v-card-actions>
-                                <v-btn color="deep-purple lighten-2" text >
-                                    Bắt đầu
+                                <v-btn :color="website.color.main" text v-if="item.is_active">
+                                    Bắt đầu ngay
+                                </v-btn>
+                                <v-btn :color="website.color.main" text else disabled>
+                                   Chuẩn bị phát hành
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -93,6 +90,7 @@
 import Vue from 'vue';
 
 import uploadApi from '../../api/upload.api';
+import InterViewApi from '../../api/intert_view.api';
 
 export default Vue.extend({
     name: 'InterView',
@@ -100,22 +98,29 @@ export default Vue.extend({
     components: {
 
     },
-    watch: {
-        user() {
-            if (!this.user) {
-                this.$router.push({ name: 'home' })
-            }
-        }
-    },
     data() {
         return {
+            interviews: [] as any,
             categorys: ['Kỷ năng phỏng vấn', 'Kỷ thuật', 'Cách viết CV', 'Hướng nghiệp', 'Học bổng', 'Nhân vật', 'Xu hướng', 'Sách hay']
         }
+    },
+    mounted() {
+        let that = this
+        that.loadInterView();
     },
     methods: {
         getImageUser(filename: string) {
             return uploadApi.getImage('user') + filename;
         },
+        getImageInterView(filename: string) {
+            return uploadApi.getImage('interview') + filename;
+        },
+        async loadInterView(){
+            let that = this;
+            const gp_inter_view = await InterViewApi.getInterView_p();
+            console.log(gp_inter_view);
+            that.interviews = gp_inter_view.data;
+        }
     }
 })
 </script>

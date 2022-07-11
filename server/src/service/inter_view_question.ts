@@ -41,6 +41,33 @@ class InterViewQuestionService {
         }
     }
 
+    public async getByIdToInterView(params: any, user: any) {
+        try {
+            const {idInterView } = params
+
+            console.log(idInterView);
+
+            const check_exist = await interViewModel.findById(idInterView)
+            if(!check_exist) {
+                this.setMessage('Inter view không tồn tại!')
+                return false
+            }
+
+            if(check_exist.user_auth.toString() != user._id.toString()) {
+                this.setMessage('Không được phép truy cập!')
+                return false
+            }
+
+            const g_inter_view_question = await interViewQuestionModel.find({interview: check_exist._id})
+            console.log(g_inter_view_question);
+
+            return g_inter_view_question
+        } catch (error) {
+            console.log(error);
+            return false
+        }
+    }
+
     public getMessage = () => {
         return this.message
     }

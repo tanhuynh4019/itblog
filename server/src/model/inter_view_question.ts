@@ -17,8 +17,8 @@ const interViewQuestionSchema: Schema = new Schema({
     level: { type: String, default: ''},
     figure: { type: String, required: true },
     is_active: { type: Boolean, default: false},
-    create_date: { type: Date, required: true},
-    update_date: { type: Date, required: true}
+    create_date: { type: Date, default: Date.now() },
+    update_date: { type: Date, default: Date.now() }
 })
 
 export default mongoose.model<IInterViewQuestion>('InterViewQuestion', interViewQuestionSchema)

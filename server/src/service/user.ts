@@ -42,6 +42,7 @@ class UserService {
             }
 
             const c_user = await userModel.create(body)
+            
 
             const token = await jwtModule.endcodedToken(c_user._id)
             if (!token) {
@@ -60,6 +61,9 @@ class UserService {
                 this.setMessage('Đã đăng ký nhưng lỗi xác thực thông tin, hãy đăng nhập và xác nhận email!')
                 return false
             }
+
+            c_user.profile = c_profile._id
+            c_user.save()
 
 
             this.setMessage('Đăng ký tài khoản ITBlog thành công!')

@@ -12,5 +12,9 @@ router.post('/api/inter-view-question', multer.uploadNone(), passport.authentica
     session: false
 }), controllerInterViewQuestion.addInterViewQuestion)
 
+router.get('/api/inter-view-question/:idInterView', passport.authenticate('jwt', {
+    session: false
+}), controllerInterViewQuestion.getByIdToInterViewQuestion)
+
 export default router
 

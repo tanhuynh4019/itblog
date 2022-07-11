@@ -30,6 +30,15 @@ class InterViewApi {
         }
     }
 
+    public async getInterView_p() {
+        try {
+            const gp_inter_view = await axios.get(this.url + `-p`)
+            return gp_inter_view.data
+        } catch (error: any) {
+            return error.response.data;
+        }
+    }
+
 }
 
 export default new InterViewApi();

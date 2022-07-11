@@ -103,7 +103,26 @@
                                     </v-btn>
                                 </v-col>
                                 <v-col cols="12">
-
+                                    <v-expansion-panels>
+                                        <v-expansion-panel v-for="(item, index) in interviewquestions" :key="index">
+                                            <v-badge color="#B71C1C" overlap content="EASY">
+                                                <v-expansion-panel-header>
+                                                    <div>
+                                                        <span v-html="item.question"></span>
+                                                        <br />
+                                                        <v-btn depressed outlined>Hiển thị đáp án</v-btn>
+                                                    </div>
+                                                    <div>
+                                                        <v-chip color="#004D40" dark class="float-end">Junior</v-chip>
+                                                    </div>
+                                                </v-expansion-panel-header>
+                                            </v-badge>
+                                            <v-expansion-panel-content>
+                                                <b>Trả lời: </b>
+                                                <p v-html="item.answer"></p>
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-expansion-panels>
                                 </v-col>
                             </v-row>
                         </v-col>
@@ -197,8 +216,11 @@ export default Vue.extend({
         that.imageNew = that.getImageCommon('none_img.png');
         that.finBySlugInterView();
     },
+    mounted() {
+    },
     data() {
         return {
+            interviewquestions: [] as any,
             levels: ['Dễ', 'Trung bình', 'Khó', 'Rất khó'],
             figures: ['Freser', 'Inter', 'Junior', 'Mid-Level', 'Senior',],
             titleDialog: '',
@@ -273,10 +295,12 @@ export default Vue.extend({
         async finBySlugInterView() {
             let that = this;
             const gbs_inter_view = await InterViewApi.getBySlugInterView({ slug: that.$route.params.slug });
-            console.log(gbs_inter_view);
-            that.interview = gbs_inter_view.data;
+            if (gbs_inter_view) {
+                that.interview = gbs_inter_view.data;
+                that.loadByIdToInterViewQuestion(gbs_inter_view.data._id);
+            }
         },
-        async addInterViewQuestion() { 
+        async addInterViewQuestion() {
             let that = this;
             const formData = new FormData();
             const data = that.interviewQuestionForm.value;
@@ -288,8 +312,12 @@ export default Vue.extend({
             formData.append('figure', data.figure);
             formData.append('id_inter_view', that.interview._id);
 
-            const c_inter_view_question = await InterViewQuestion.addInterViewQuestion(formData)
-            console.log(c_inter_view_question);
+            const c_inter_view_question = await InterViewQuestion.addInterViewQuestion(formData);
+        },
+        async loadByIdToInterViewQuestion(idInterView: string) {
+            let that = this;
+            const gbiiv_inter_view_question = await InterViewQuestion.getByIdToInterViewQuestion({ idInterView });
+            that.interviewquestions = gbiiv_inter_view_question.data;
         }
     }
 })

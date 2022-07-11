@@ -16,6 +16,20 @@ class InterViewQuestionController {
             res.status(400).json({ status: 400, error: true, message: error.message })
         }
     }
+
+    public async getByIdToInterViewQuestion(req: Request, res: Response, next: NextFunction){
+        try {
+            const gbtiv_inter_view_question = await interViewQuestionService.getByIdToInterView(req.params, req.user)
+            if (gbtiv_inter_view_question) {
+                res.status(200).json({ status: 200, error: false, message: interViewQuestionService.getMessage(), data: gbtiv_inter_view_question })
+            } else {
+                res.status(400).json({ status: 400, error: true, message: interViewQuestionService.getMessage() })
+            }
+       
+        } catch (error: any) {
+            res.status(400).json({ status: 400, error: true, message: error.message })
+        }
+    }
 }
 
 export default new InterViewQuestionController()

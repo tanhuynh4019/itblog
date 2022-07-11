@@ -18,5 +18,6 @@ export default interface IUser extends Document {
     updated_date: string,
     login_date: string,
     vip_expiration_date: string,
-    exp: number
+    exp: number,
+    profile: any
 }

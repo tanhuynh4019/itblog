@@ -18,7 +18,7 @@
                     </center>
                   </v-col>
                   <v-col cols="9">
-                    <h2 class="white--text">{{profile.profile_name}}</h2>
+                    <h2 class="white--text">{{ profile.profile_name }}</h2>
                     <p>
                       Kỹ thuật phần mềm - Đại học Thủ Dầu Một - Bình Dương
                     </p>
@@ -69,8 +69,11 @@ export default Vue.extend({
   components: {
 
   },
-  created(){
+  created() {
     let that = this
+    if (!this.user) {
+      this.$router.push({ name: 'home' })
+    }
     that.loadProfile();
   },
   watch: {
@@ -127,7 +130,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    async loadProfile(){
+    async loadProfile() {
       let that = this;
       const g_profile: any = await ProfileApi.getProfile();
       that.profile = g_profile.data;

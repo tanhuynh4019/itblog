@@ -1,6 +1,7 @@
 import fs from 'fs'
 
 import interViewModel from '../model/inter_view'
+import userModel from '../model/user'
 
 import e_ActiveType from '../common/activity_type.enum'
 import e_HistoryType from '../common/history.enum'
@@ -21,11 +22,12 @@ class InterViewService {
 
     public async add(body: any, file: any, user: any, ip: string) {
         try {
+            
+            console.log(user.role);
             if(user.role == e_ROLE.USER){
                 this.setMessage('Bạn không có quyền đăng bài Inter view này!')
                 return false                
             }
-
             if(user.role > 4 || user.role < 0){
                 this.setMessage('Bạn không có quyền đăng bài Inter view này!')
                 return false
@@ -86,6 +88,22 @@ class InterViewService {
         }
     }
 
+    public async getInterView_public() {
+        try {
+            const g_inter_view = await interViewModel.find({is_browser: true}).populate({
+                path: 'user_auth',
+                populate: {
+                    path: 'profile'
+                }
+            })
+            this.setMessage('Đã tìm thấy dữ liệu!')
+            return g_inter_view
+        } catch (error) {
+            console.log(error);
+            return false
+        }
+    }
+
     public async findByIdToUser(id_inter_view: string, user: any) {
         try {
             const g_inter_view = await interViewModel.findOne({_id: id_inter_view, user_auth: user._id})
@@ -95,7 +113,7 @@ class InterViewService {
                 this.setMessage('Không tồn tại Inter view này!')
                 return false
             }
-            
+
             return g_inter_view
         } catch (error) {
             console.log(error);
