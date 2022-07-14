@@ -17,6 +17,9 @@ class UploadApi {
         else if (folder == 'interview') {
             return this.url + '/inter_view/';
         }
+        else if (folder == 'blog') {
+            return this.url + '/blog/';
+        }
         else{
             return this.url;
         }

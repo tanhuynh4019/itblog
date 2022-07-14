@@ -3,6 +3,8 @@ enum ActivityType {
     LOGIN = 'login',
     CREATE_INTERVIEW = 'create_inter_view',
     EDIT_INTERVIEW = 'edit_inter_view',
+    CREATE_BLOG = 'create_blog',
+    EDIT_BLOG = 'edit_blog',
 }
 
 export default ActivityType

@@ -5,6 +5,7 @@ import userRouter from './user/user'
 import profileRouter from './user/profile'
 import interViewRouter from './user/inter_view'
 import interViewQuestionRouter from './user/inter_view_question'
+import blogRouter from './user/blog'
 
 const router = (app: Application) => {
 
@@ -12,6 +13,7 @@ const router = (app: Application) => {
     app.use(profileRouter)
     app.use(interViewRouter)
     app.use(interViewQuestionRouter)
+    app.use(blogRouter)
 
     app.use((req: Request, res: Response, next: NextFunction) => {
         next(new createHttpError.NotFound())
